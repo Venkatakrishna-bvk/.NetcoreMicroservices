@@ -37,10 +37,10 @@ docker rmi  $(docker images -aq)
 Create app docker images n container:
 
 Run:
-docker-compose -f .\docker-compose.yml - f .\docker-compose.override.yml up -d
+docker-compose -f .\docker-compose.yml -f .\docker-compose.override.yml up -d
 
 Stopping:
-docker-compose -f .\docker-compose.yml - f .\docker-compose.override.yml down
+docker-compose -f .\docker-compose.yml -f .\docker-compose.override.yml down
 
 Clean solution then will remove all docker container n images
 
