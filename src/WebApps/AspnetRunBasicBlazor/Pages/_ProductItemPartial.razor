@@ -1,0 +1,52 @@
+﻿@inject ICatalogService CatalogService
+@inject IBasketService BasketService
+@inject NavigationManager NavigationManager
+@if (Model != null)
+{
+    <div class="card">
+        <NavLink href="@($"/Product/{Model.Id}")">
+            <img asp-append-version="true" class="card-img-top" src="/images/product/@Model.ImageFile" alt="" />
+        </NavLink>
+        <div class="card-body">
+            <h4 class="card-title">
+                <NavLink href="@($"/Product/{Model.Id}")" class="color-main">
+                    @Model.Name
+                </NavLink>
+            </h4>
+            <p class="card-text">@Model.Summary</p>
+            <div class="row">
+                <div class="col">
+                    <p class="btn btn-danger btn-block">@Model.Price $</p>
+                </div>
+                <div class="col-12">
+                   <a href="javascript:void(0)" @onclick="AddAddToCart" class="btn btn-success btn-block">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@code {
+    [Parameter]
+    public CatalogModel Model { get; set; }
+
+    public async Task AddAddToCart()
+    {
+        var product = await CatalogService.GetCatalog(Model.Id);
+
+        var userName = "swn";
+        var basket = await BasketService.GetBasket(userName);
+
+        basket.Items.Add(new BasketItemModel
+        {
+            ProductId = Model.Id,
+            ProductName = product.Name,
+            Price = product.Price,
+            Quantity = 1,
+            Color = "Black"
+        });
+
+        var basketUpdated = await BasketService.UpdateBasket(basket);
+
+        NavigationManager.NavigateTo("Cart");
+    }
+}
